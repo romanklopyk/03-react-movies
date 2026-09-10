@@ -5,8 +5,6 @@ import getMovies from '../../services/movieService';
 import MovieGrid from "../MovieGrid/MovieGrid.tsx";
 import MovieModal from "../MovieModal/MovieModal.tsx";
 
-
-
 function App() {
     const [selectedMovie, setSelectedMovie] = React.useState({});
     const [movie, setMovie] = React.useState('');
@@ -31,7 +29,7 @@ function App() {
                 selectedMovie={selectedMovie}
                 setSelectedMovie={setSelectedMovie}
             />
-            {isModalOpen && <MovieModal setIsModalOpen={setIsModalOpen}/>}
+            {isModalOpen && <MovieModal movie={selectedMovie} setIsModalOpen={setIsModalOpen}/>}
         </>
     )
 }
