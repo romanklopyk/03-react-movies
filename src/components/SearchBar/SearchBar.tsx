@@ -1,6 +1,26 @@
-import styles from './SearchBar.module.css'
+import styles from './SearchBar.module.css';
+import React from "react";
 
-function SearchBar() {
+interface SearchBarProps {
+    handleForm: (query: string) => void;
+}
+
+function SearchBar({handleForm}: SearchBarProps) {
+
+    const [inputValue, setInputValue] = React.useState('');
+
+    function handleInput(event: React.ChangeEvent<HTMLInputElement>) {
+        setInputValue(event.target.value);
+    }
+
+    function formSubmit() {
+        if (inputValue) {
+            handleForm(inputValue);
+        } else {
+            console.log("No input value")
+        }
+    }
+
     return (
         <header className={styles.header}>
             <div className={styles.container}>
@@ -12,15 +32,18 @@ function SearchBar() {
                 >
                     Powered by TMDB
                 </a>
-                <form className={styles.form}>
+                <form className={styles.form} action={formSubmit}>
                     <input
+                        onChange={handleInput}
                         className={styles.input}
                         type="text"
                         name="query"
                         autoComplete="off"
                         placeholder="Search movies..."
                         autoFocus
+                        value={inputValue}
                     />
+
                     <button className={styles.button} type="submit">
                         Search
                     </button>
