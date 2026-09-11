@@ -1,16 +1,26 @@
 import css from './MovieGrid.module.css';
+import React from "react";
+import type {Movie} from "../../types/movie.ts";
+import type {SelectedMovie} from "../../types/movie.ts";
 
-function MovieGrid({movies, isModalOpen, setIsModalOpen, selectedMovie, setSelectedMovie}) {
+interface MovieGridProps {
+    movies: Movie[];
+    setIsModalOpen: (isOpen: boolean) => void;
+    setSelectedMovieId: React.Dispatch<React.SetStateAction<SelectedMovie>>;
+}
 
-    function handleMovieClick(movie) {
-        setSelectedMovie(movie);
+
+function MovieGrid({movies, setIsModalOpen, setSelectedMovieId}:MovieGridProps) {
+
+    function handleMovieClick(id: number) {
+        setSelectedMovieId(prevState => ({...prevState, id: id}));
         setIsModalOpen(true);
     }
 
     return (
         <>
             <ul className={css.grid}>
-                {movies.map(movie => <li key={movie.id} onClick={() => handleMovieClick(movie)} >
+                {movies.map(movie => <li key={movie.id} onClick={() => handleMovieClick(movie.id)} >
                     <div  className={css.card}>
                         <img
                             className={css.image}
@@ -22,9 +32,7 @@ function MovieGrid({movies, isModalOpen, setIsModalOpen, selectedMovie, setSelec
                     </div>
                 </li>)}
             </ul>
-
         </>
-
     );
 }
 
