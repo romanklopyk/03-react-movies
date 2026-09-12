@@ -10,8 +10,8 @@ export interface Movie {
 
 
 
-export interface SelectedMovie {
-    id: number | null;
-    movie: Movie | null;
-}
+// export interface SelectedMovie {
+//     id: number | null;
+//     movie: Movie | null;
+// }
 

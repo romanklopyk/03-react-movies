@@ -1,4 +1,4 @@
-import axios, {type AxiosResponse} from 'axios';
+import axios from 'axios';
 import type {Movie} from '../types/movie';
 
 interface ResponseData {
@@ -16,9 +16,9 @@ const config =
     }
 
 
-async function fetchMovies(query: string): Promise<AxiosResponse<ResponseData>> {
+async function fetchMovies(query: string): Promise<Movie[]>  {
     try {
-        const response = await axios.get('/search/movie', {
+        const response = await axios.get<ResponseData>('/search/movie', {
                 ...config,
                 params: {
                     query
@@ -26,7 +26,7 @@ async function fetchMovies(query: string): Promise<AxiosResponse<ResponseData>> 
             }
         );
         console.log('response', response);
-        return response;
+        return response.data.results;
     } catch
         (error) {
         console.error('Error fetching movies:', error);
@@ -34,18 +34,4 @@ async function fetchMovies(query: string): Promise<AxiosResponse<ResponseData>> 
     }
 }
 
-async function fetchMovieDetail(id: number):Promise<Movie> {
-    try
-    {
-        const response = await axios.get<Movie>(`/movie/${id}`, config)
-        console.log('response detail', response.data);
-        return response.data;
-    }
-    catch (error) {
-        console.error('Error fetching movie detail:', error);
-        throw error;
-    }
-}
-
-
-export {fetchMovies as default, fetchMovieDetail};
+export default fetchMovies;
