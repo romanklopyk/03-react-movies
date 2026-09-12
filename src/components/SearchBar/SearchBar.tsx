@@ -3,10 +3,10 @@ import React from "react";
 import toast, {Toaster} from 'react-hot-toast';
 
 interface SearchBarProps {
-    formSubmit: (query: string) => void;
+    onSubmit: (query: string) => void;
 }
 
-function SearchBar({formSubmit}: SearchBarProps) {
+function SearchBar({onSubmit}: SearchBarProps) {
 
     const [inputValue, setInputValue] = React.useState('');
 
@@ -16,7 +16,7 @@ function SearchBar({formSubmit}: SearchBarProps) {
 
     function handleForm(): void {
         if (inputValue.trim()) {
-            formSubmit(inputValue.trim());
+            onSubmit(inputValue.trim());
             // setInputValue('');
         } else {
             toast("Please enter your search query.");

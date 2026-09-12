@@ -7,6 +7,8 @@ import MovieModal from "../MovieModal/MovieModal.tsx";
 import type {Movie} from '../../types/movie';
 import toast, {Toaster} from 'react-hot-toast';
 import type {SelectedMovie} from '../../types/movie';
+import Loader from "../Loader/Loader.tsx";
+import ErrorMessage from "../ErrorMessage/ErrorMessage.tsx";
 
 type Input = string;
 
@@ -15,6 +17,8 @@ function App() {
     const [query, setQuery] = React.useState('');
     const [movies, setMovies] = React.useState<Movie[]>([]);
     const [isModalOpen, setIsModalOpen] = React.useState(false);
+    const [isLoading, setIsLoading] = React.useState(false);
+    const [isError, setIsError] = React.useState(false);
 
 
     React.useEffect(() => {
@@ -22,10 +26,19 @@ function App() {
             return;
 
         async function handleForm(query: string) {
-            const response = await fetchMovies(query);
-            setMovies(response.data.results);
-            if (!response.data.results.length)
-                toast("No movies found for your request.");
+            try {
+                setIsLoading(true);
+                setIsError(false);
+                const response = await fetchMovies(query);
+                setMovies(response.data.results);
+                if (!response.data.results.length)
+                    toast("No movies found for your request.");
+            } catch (e) {
+                setIsError(true);
+            } finally {
+                setIsLoading(false);
+            }
+
         }
 
         handleForm(query);
@@ -48,20 +61,24 @@ function App() {
     }, [selectedMovie.id]);
 
 
-    function formSubmit(input: Input) {
+    function onSubmit(input: Input) {
         setQuery(input);
     }
 
     return (
         <>
             <Toaster/>
-            <SearchBar formSubmit={formSubmit}/>
-            <MovieGrid
+            <SearchBar onSubmit={onSubmit}/>
+            {isLoading && <Loader/>}
+            {!isLoading && isError && <ErrorMessage/>}
+                <MovieGrid
                 movies={movies}
                 setIsModalOpen={setIsModalOpen}
                 setSelectedMovieId={setSelectedMovie}
             />
-            {isModalOpen && selectedMovie.movie && <MovieModal movieDetail={selectedMovie.movie} setSelectedMovie={setSelectedMovie} setIsModalOpen={setIsModalOpen}/>}
+            {isModalOpen && selectedMovie.movie &&
+                <MovieModal movieDetail={selectedMovie.movie} setSelectedMovie={setSelectedMovie}
+                            setIsModalOpen={setIsModalOpen}/>}
         </>
     )
 }
